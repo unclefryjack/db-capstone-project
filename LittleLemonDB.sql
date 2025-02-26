@@ -34,14 +34,14 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Bookings` (
   `BookingID` INT NOT NULL,
   `Date` DATE NULL,
   `TableNumber` INT NULL,
-  `CustomerID` INT NOT NULL,
+  `FK2_CustomerID` INT NOT NULL,
   PRIMARY KEY (`BookingID`),
-  INDEX `CustomerID_idx` (`CustomerID` ASC) VISIBLE,
+  INDEX `CustomerID_idx` (`FK2_CustomerID` ASC) VISIBLE,
   CONSTRAINT `CustomerID`
-    FOREIGN KEY (`CustomerID`)
+    FOREIGN KEY (`FK2_CustomerID`)
     REFERENCES `LittleLemonDB`.`Customer Details` (`CustomerID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -67,9 +67,11 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Orders` (
   `TotalCost` DECIMAL(7,2) NOT NULL,
   `BookingID` INT NOT NULL,
   `MenuID` INT NOT NULL,
+  `FK_CustomerID` INT NOT NULL,
   PRIMARY KEY (`OrderID`),
   INDEX `BookingID_idx` (`BookingID` ASC) VISIBLE,
   INDEX `MenuID_idx` (`MenuID` ASC) VISIBLE,
+  INDEX `CustomerID_idx` (`FK_CustomerID` ASC) VISIBLE,
   CONSTRAINT `BookingID`
     FOREIGN KEY (`BookingID`)
     REFERENCES `LittleLemonDB`.`Bookings` (`BookingID`)
@@ -79,7 +81,12 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Orders` (
     FOREIGN KEY (`MenuID`)
     REFERENCES `LittleLemonDB`.`Menu` (`MenuID`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `2CustomerID`
+    FOREIGN KEY (`FK_CustomerID`)
+    REFERENCES `LittleLemonDB`.`Customer Details` (`CustomerID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -96,8 +103,8 @@ CREATE TABLE IF NOT EXISTS `LittleLemonDB`.`Order Delivery Status` (
   CONSTRAINT `OrderID`
     FOREIGN KEY (`OrderID`)
     REFERENCES `LittleLemonDB`.`Orders` (`OrderID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
